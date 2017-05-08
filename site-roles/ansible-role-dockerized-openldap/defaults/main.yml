@@ -1,0 +1,76 @@
+---
+# defaults file for ansible-role-dockerized-openldap
+
+openldap_user: openldap
+openldap_group: openldap
+
+openldap_container_state: present
+openldap_phpldapadmin_container_state: present
+
+# LDAP configuration params | env vars
+openldap_org: "Shelleg and Co"
+
+openldap_domain_name:   "{{ shelleg_domain_name | d('shelleg.local') }}"
+openldap_domain_prefix: "{{ openldap_domain_name.split('.')[0] }}"
+openldap_domain_suffix: "{{ openldap_domain_name.split('.')[1] }}"
+
+#openldap_admin_username: admin
+openldap_admin_passowrd: Chang3m3
+
+openldap_readonly_enabled: true
+openldap_readonly_user: readonly
+openldap_readonly_passowrd: Read0nly
+
+openldap_bakcend: hdb
+
+openldap_host_runtime_dir: /var/lib/ldap
+openldap_container_runtime_dir: /var/lib/ldap
+
+openldap_host_conf_dir: /etc/ldap/slapd.d
+openldap_container_conf_dir: /etc/ldap/slapd.d
+
+openldap_env_file: openldap.env
+openldap_env_filepath: "/etc/{{ openldap_env_file }}"
+
+openldap_auth:
+  server_uri: ldap://localhost/
+  bind_dn: "cn=admin,dc={{ openldap_domain_prefix }},dc={{ openldap_domain_suffix }}"
+  bind_pw: "{{ openldap_admin_passowrd }}"
+
+openldap_container_hostname: openldap-service
+openldap_container_name: osixia/openldap
+openldap_container_tag: 1.1.8
+
+# exposed ports [Docker]
+openldap_container_ldap_port: 389
+openldap_host_ldap_port: 389
+# mapped ports [host]
+openldap_container_ldaps_port: 636
+openldap_host_ldaps_port: 636
+
+openldap_docker_host_ip: localhost
+
+# phpLDAPadmin
+openldap_phpldapadmin_container_hostname: openldap
+openldap_phpldapadmin_container_name: osixia/phpldapadmin
+openldap_phpldapadmin_container_tag: 0.6.12
+openldap_phpldapadmin_server_admin: "hostmaster@{{ openldap_domain_name }}"
+
+# exposed ports [Docker]
+openldap_phpldapadmin_container_http_port: 80
+openldap_phpldapadmin_host_http_port: 8000
+# mapped ports [host]
+openldap_phpldapadmin_container_https_port: 443
+openldap_phpldapadmin_host_https_port: 8443
+
+openldap_phpldapadmin_with_ssl: false
+
+# OpenLdap backup
+openldap_backup_enable: true
+
+openldap_backup_container_hostname: openldap-backup
+openldap_backup_container_name: osixia/openldap
+openldap_backup_container_tag: 1.1.8
+
+openldap_host_backup_dir: /var/lib/ldap-backup
+openldap_container_backup_dir: /data/backup

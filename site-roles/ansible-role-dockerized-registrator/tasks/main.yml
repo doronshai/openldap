@@ -1,0 +1,29 @@
+---
+# tasks file for ansible-role-docker-registrator
+
+- name: "Get & Set consul facts based on hostvars > groups > consul-leader > 0"
+  set_fact:
+    consul_leaders_facts: "{{ hostvars[groups['consul-leader'][0]] }}"
+  when: "hostvars[groups['consul-leader'][0]] is defined"
+
+- name: "Set"
+  set_fact:
+    consul_leader_ip: "{{ consul_leaders_facts['ansible_host'] }}"
+    consul_leader_hostname: "{{ consul_leaders_facts['ansible_hostname'] }}"
+    consul_port: "{{ consul_port | d('8500') }}"
+  when: consul_leaders_facts is defined
+
+- fail:
+    msg: "This role requires inventory to have a group named consul-leader with at least one memeber"
+  when: "hostvars[groups['consul-leader'][0]] is undefined"
+
+- name: "launch regitrator container"
+  docker_container:
+    name: "{{ registrator_container_name }}"
+    image: "{{ registrator_container_image }}"
+    state: started
+    restart_policy: always
+    restart: yes
+    volumes:
+     - "/var/run/docker.sock:/tmp/docker.sock"
+    command: "{{ registrator_cmd }}"

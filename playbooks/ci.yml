@@ -1,0 +1,36 @@
+---
+- hosts: ci-servers
+  become: true
+
+  vars:
+    noproxy_hosts: "{{ no_proxy_hosts }}" # Hosts you do not want to proxy ...
+    cj_proxy_host: "{{ proxy_host }}"
+    cj_proxy_port: "{{ proxy_port }}"
+    cj_set_proxy: true
+#    cj_use_custom_update_site: true
+
+#    juseppe_cert_dir: /var/lib/juseppe
+#    juseppe_cert_file: uc.crt
+#    juseppe_host_port: 9090
+#    juseppe_docker_host_ip: 172.16.1.100
+
+    ## for 'shelleg.proxy-client' role
+    proxy_server_host: "{{ cj_proxy_host }}"
+    proxy_server_port: "{{ cj_proxy_port }}"
+    proxy_client_yum: true
+    proxy_client_apt: true
+    proxy_client_system: true
+
+  roles:
+    - role: shelleg.proxy-client
+    - role: oracle-java
+    - role: shelleg.epel
+#    - role: shelleg.simple-docker-daemon
+#      when: cj_use_custom_update_site == true
+#    - role: shelleg.juseppe
+#      when: cj_use_custom_update_site == true
+    - role: shelleg.custom-jenkins
+
+#    - role: jenkins-populate-jobs
+
+

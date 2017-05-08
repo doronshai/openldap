@@ -1,0 +1,49 @@
+---
+
+#- hosts: proxy-servers,ci-servers,repo-servers,!localhost
+#  become: true
+#  roles:
+#    - role: tikal-common
+#    - role: geerlingguy.git
+#    - role: oracle-java
+#    - role: simple-docker-daemon
+#    - role: ansible-role-dockerized-openldap
+#    - role: ansible-role-dockerized-snipeit
+#      tags:
+#        - snipeit
+#- include: proxy.yml
+#- include: repo.yml
+#- include: ci.yml
+- hosts: central
+  become: true
+#  tasks:
+#    - set_fact:
+#        consul_leades_facts: "{{ hostvars[groups['consul-leader'][0]] }}"
+#    - debug:
+##        msg: "hostvars={{hostvars}}"
+#        msg: "{{ consul_leades_facts['ansible_host'] }}"
+#    - debug:
+#        msg: "{{ consul_leades_facts['ansible_hostname'] }}"
+##        msg: "groups={{ hostvars['groups['consul-servers'][0]]' }}"
+
+  roles:
+    - role: tikal-common
+    - role: geerlingguy.git
+    - role: oracle-java
+    - role: simple-docker-daemon
+#    - role: ansible-role-dockerized-consul
+#    - role: ansible-role-dockerized-registrator
+    - role: ansible-role-portainer
+      portainer_mode: single
+    - role: ansible-role-dockerized-openldap
+      tags: ldap
+      openldap_clean: true
+#      openldap_purge: true
+#    - role: ansible-role-dockerized-snipeit
+#      tags: snipeit
+#      snipeit_clean: true
+#      snipeit_purge: true
+    - role: ansible-role-ldap-objects
+#    - role: nexus
+#    - role: jenkins
+#    - role: fleet-tracker-pipeline

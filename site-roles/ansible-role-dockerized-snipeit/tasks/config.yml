@@ -1,0 +1,35 @@
+---
+
+- name: "Create Docekr-host directories"
+  file:
+    state: directory
+    path: "{{ item }}"
+    mode: 0755
+  with_items:
+    - "{{ snipeit_data_dir }}"
+    - "{{ snipeit_conf_dir }}"
+    - "{{ snipeit_db_storage_host_path }}"
+
+- name: "Get snipeit token from docker run command"
+  command: "docker run --rm snipe/snipe-it:v3.6.4 - -env=production | tail -1"
+  register: _snipeit_token
+
+#- name: "Get snipeit token from docker run command"
+#  docker_container:
+#    name: temp-container
+#    image: "{{ snipeit_container_name }}:{{ snipeit_container_tag }}"
+#    command: "snipeit php artisan key:generate - -env={{ snipeit_env | d('production') }}"
+#    cleanup: yes
+#    detach: yes
+#  register: _snipeit_token
+
+- debug: var=_snipeit_token
+- debug: var=_snipeit_token.stdout_lines[2]
+
+- set_fact:
+    _snipeit_key: "{{ _snipeit_token.stdout_lines[2] }}"
+
+- name: "Generate config file"
+  template:
+    src: "{{ snipeit_conf_file }}.j2"
+    dest: "{{ snipeit_conf_filepath }}"

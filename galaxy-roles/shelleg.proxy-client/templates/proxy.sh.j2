@@ -1,0 +1,13 @@
+# set proxy config via profie.d - should apply for all users
+# wget ...
+export http_proxy="{{ http_proxy }}"
+export https_proxy="{{ http_proxy }}"
+export ftp_proxy="{{ http_proxy }}"
+export no_proxy="{{ proxy_client_no_proxy_string }}"
+
+# curl ...
+export HTTP_PROXY="{{ http_proxy }}"
+export HTTPS_PROXY="{{ http_proxy }}"
+export FTP_PROXY="{{ http_proxy }}"
+export NO_PROXY="{{ proxy_client_no_proxy_string }}"
+

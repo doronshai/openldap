@@ -1,0 +1,23 @@
+---
+# tasks file for ansible-role-juseppe
+
+- set_fact:
+    juseppe_docker_host_ip: "{{ ansible_eth1.ipv4.address }}"
+  when: ansible_virtualization_type == 'virtualbox'
+
+- set_fact:
+    juseppe_docker_host_ip: "{{ ansible_eth0.ipv4.address }}"
+  when: ansible_virtualization_type != 'virtualbox'
+
+- debug:
+    msg: "juseppe_docker_host_ip is -> {{ juseppe_docker_host_ip }}"
+
+- name: "Get all plugins from internet to cache directory"
+  include: "get-plugins.yml"
+
+- name: "Generate juseppe certificate"
+  include: "gen-cert.yml"
+
+- name: "Run juseppe container"
+  include: "run-container.yml"
+

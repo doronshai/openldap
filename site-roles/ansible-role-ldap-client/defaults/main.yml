@@ -1,0 +1,27 @@
+---
+# defaults file for ansible-role-ldap-client
+
+
+ldapc_nsswitch_filename: "nsswitch.conf"
+ldapc_nsswitch_filepath: "/etc/{{ ldapc_nsswitch_filename }}"
+
+
+ldapc_aliases:
+  - files
+  - nisplus
+
+ldapc_automount:
+  - files
+  - nisplus
+
+ldapc_bootparams:
+  - nisplus
+  - '[NOTFOUND=return]'
+  - files
+
+ldapc_ethers:
+  - files
+
+ldapc_
+ldapc_
+ldapc_

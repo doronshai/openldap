@@ -1,0 +1,6 @@
+---
+- hosts: proxy-servers
+  become: true
+  roles:
+    - role: shelleg.squid
+    - role: shelleg.proxy-client

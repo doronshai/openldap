@@ -1,0 +1,2 @@
+# {{ ansible_managed }}
+{{ tikal_user }} ALL=(ALL) NOPASSWD:ALL

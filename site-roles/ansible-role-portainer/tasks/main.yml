@@ -1,0 +1,51 @@
+---
+- name: "Stop portainer container"
+  docker_container:
+    name: portainer
+    image: "portainer/portainer:{{ portainer_version }}"
+    state: absent
+    restart_policy: always
+
+- name: "Run portainer container"
+  docker_container:
+    name: portainer
+    image: "portainer/portainer:{{ portainer_version }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "{{ portainer_port }}:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+- name: "Set admin password for Portainer"
+  uri:
+    url: "http://{{ ansible_default_ipv4.address }}:5000/api/users/admin/init"
+    method: POST
+    return_content: yes
+    body: {"password":"{{ portainer_admin_pass }}"}
+    body_format: json
+
+- block:
+  - name: "Authenticate against the API (for cluster)"
+    uri:
+      url: "http://{{ ansible_default_ipv4.address }}:{{ portainer_port }}/api/auth"
+      method: POST
+      return_content: yes
+      body: {"username": "admin", "password": "{{ portainer_pass }}"}
+      body_format: json
+    register: auth_token
+
+  - debug:
+      msg: "{{ (auth_token.content|from_json).jwt }}"
+
+  - name: "Define endpoints"
+    uri:
+      url: "http://{{ ansible_default_ipv4.address }}:{{ portainer_port }}/api/endpoints"
+      method: POST
+      return_content: yes
+      HEADER_Authorization: "{{ (auth_token.content|from_json).jwt }}"
+      body: {"Name":"{{ hostvars[item]['ansible_host'] }}", "URL":"tcp://{{ hostvars[item]['ansible_host'] }}:2375"}
+      body_format: json
+    with_items:
+      - "{{ groups['{{ swarm_nodes_group }}'] | difference(groups['{{ swarm_managers_group }}']) }}"
+  when: portainer_mode == "cluster"

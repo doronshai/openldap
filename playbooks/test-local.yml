@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  roles:
+    - role: ansible-role-dockerized-snipeit
+      tags:
+        - snipeit
+      snipeit_conf_dir: "{{ playbook_dir }}/../local-test/snipeit-conf"
+      snipeit_data_dir: "{{ playbook_dir }}/../local-test/snipeit-data"
+      snipeit_db_storage_host_path: "{{ playbook_dir }}/../local-test/mysql/data"

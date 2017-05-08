@@ -1,0 +1,21 @@
+---
+openldap_org: "Tikal"
+openldap_domain_name:   tikal.local
+openldap_domain_prefix: "{{ openldap_domain_name.split('.')[0] }}"
+openldap_domain_suffix: "{{ openldap_domain_name.split('.')[1] }}"
+openldap_admin_passowrd: T1kalKn0w
+
+openldap_readonly_enabled: true
+openldap_readonly_user: readonly
+openldap_readonly_passowrd: ldap_read
+
+openldap_auth:
+  server_uri: ldap://localhost/
+  bind_dn: "cn=admin,dc={{ openldap_domain_prefix }},dc={{ openldap_domain_suffix }}"
+  bind_pw: "{{ openldap_admin_passowrd }}"
+
+openldap_obj_groups:
+  - users
+  - samba_users
+  - ci_users # nexus/artifactory/jenkins/gitlab
+  - docker_users

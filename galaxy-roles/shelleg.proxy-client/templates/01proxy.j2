@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+Acquire::http::proxy "{{ http_proxy }}";
+Acquire::ftp::proxy "{{ http_proxy }}";
+Acquire::https::proxy "{{ http_proxy }}";
+

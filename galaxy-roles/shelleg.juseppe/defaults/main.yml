@@ -1,0 +1,89 @@
+---
+# defaults file for ansible-role-juseppe
+
+juseppe_container_hostname: juseppe
+juseppe_container_name: lanwen/juseppe
+juseppe_container_tag: 1.0.0
+juseppe_container_port: 8080
+juseppe_host_port: 9090
+juseppe_docker_host_ip: localhost
+
+juseppe_cert_dir: /var/lib/juseppe
+juseppe_cert_file: uc.crt
+juseppe_plugin_cache_dir: /var/cache/juseppe
+
+juseppe_plugins:
+  - { name: "credentials-binding",  version: "1.10" }
+  - { name: "jenkins-multijob-plugin",  version: "1.23" }
+  - { name: "workflow-aggregator",  version: "2.4" }
+  - { name: "durable-task",  version: "1.13" }
+  - { name: "github-organization-folder",  version: "1.5" }
+  - { name: "windows-slaves",  version: "1.2" }
+  - { name: "workflow-job",  version: "2.9" }
+  - { name: "matrix-project",  version: "1.8" }
+  - { name: "maven-plugin",  version: "2.14" }
+  - { name: "mapdb-api",  version: "1.0.9.0" }
+  - { name: "cloudbees-folder",  version: "5.16" }
+  - { name: "scm-api",  version: "1.3" }
+  - { name: "ace-editor",  version: "1.1" }
+  - { name: "job-node-stalker",  version: "1.0.5" }
+  - { name: "git-server",  version: "1.7" }
+  - { name: "workflow-cps",  version: "2.24" }
+  - { name: "mailer",  version: "1.18" }
+  - { name: "envinject",  version: "1.93.1" }
+  - { name: "branch-api",  version: "1.11.1" }
+  - { name: "momentjs",  version: "1.1.1" }
+  - { name: "ldap",  version: "1.13" }
+  - { name: "parameterized-trigger",  version: "2.32" }
+  - { name: "workflow-basic-steps",  version: "2.3" }
+  - { name: "timestamper",  version: "1.8.7" }
+  - { name: "token-macro",  version: "2.0" }
+  - { name: "workflow-cps-global-lib",  version: "2.5" }
+  - { name: "workflow-support",  version: "2.12" }
+  - { name: "junit",  version: "1.19" }
+  - { name: "workflow-scm-step",  version: "2.3" }
+  - { name: "structs",  version: "1.5" }
+  - { name: "github-branch-source",  version: "1.10.1" }
+  - { name: "run-condition",  version: "1.0" }
+  - { name: "jquery",  version: "1.11.2-0" }
+  - { name: "git",  version: "3.0.1" }
+  - { name: "git-client",  version: "2.2.1" }
+  - { name: "handlebars",  version: "1.1.1" }
+  - { name: "conditional-buildstep",  version: "1.3.5" }
+  - { name: "resource-disposer",  version: "0.6" }
+  - { name: "pipeline-build-step",  version: "2.4" }
+  - { name: "matrix-auth",  version: "1.4" }
+  - { name: "ws-cleanup",  version: "0.32" }
+  - { name: "pipeline-milestone-step",  version: "1.3" }
+  - { name: "plain-credentials",  version: "1.3" }
+  - { name: "build-pipeline-plugin",  version: "1.5.6" }
+  - { name: "pipeline-rest-api",  version: "2.4" }
+  - { name: "subversion",  version: "2.7.1" }
+  - { name: "simple-theme-plugin",  version: "0.3" }
+  - { name: "pipeline-stage-step",  version: "2.2" }
+  - { name: "build-timeout",  version: "1.18" }
+  - { name: "gradle",  version: "1.25" }
+  - { name: "ant",  version: "1.4" }
+  - { name: "pipeline-stage-view",  version: "2.4" }
+  - { name: "antisamy-markup-formatter",  version: "1.5" }
+  - { name: "pam-auth",  version: "1.3" }
+  - { name: "workflow-multibranch",  version: "2.9.2" }
+  - { name: "script-security",  version: "1.25" }
+  - { name: "external-monitor-job",  version: "1.7" }
+  - { name: "pipeline-input-step",  version: "2.5" }
+  - { name: "workflow-durable-task-step",  version: "2.8" }
+  - { name: "bouncycastle-api",  version: "2.16.0" }
+  - { name: "credentials",  version: "2.1.10" }
+  - { name: "ssh-slaves",  version: "1.12" }
+  - { name: "email-ext",  version: "2.53" }
+  - { name: "workflow-api",  version: "2.8" }
+  - { name: "jquery-detached",  version: "1.2.1" }
+  - { name: "icon-shim",  version: "2.0.3" }
+  - { name: "github",  version: "1.25.1" }
+  - { name: "github-api",  version: "1.84" }
+  - { name: "pipeline-graph-analysis",  version: "1.3" }
+  - { name: "workflow-step-api",  version: "2.7" }
+  - { name: "job-dsl",  version: "1.57" }
+  - { name: "display-url-api",  version: "0.5" }
+  - { name: "ssh-credentials",  version: "1.12" }
+  - { name: "javadoc",  version: "1.4" }

@@ -1,0 +1,16 @@
+---
+
+- name: "Create Docker-host directories"
+  file:
+    state: directory
+    path: "{{ item }}"
+    mode: 0755
+  with_items:
+    - "{{ openldap_host_conf_dir }}"
+    - "{{ openldap_host_runtime_dir }}"
+    - "{{ openldap_host_backup_dir }}"
+
+- name: "Generate config file"
+  template:
+    src: "{{ openldap_env_file }}.j2"
+    dest: "{{ openldap_env_filepath }}"

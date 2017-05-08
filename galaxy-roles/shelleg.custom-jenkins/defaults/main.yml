@@ -1,0 +1,197 @@
+---
+# defaults file for ansible-role-custom-jenkins
+
+# Listen port
+cj_http_port: 8080
+
+cj_repo_base_url: 'https://pkg.jenkins.io/'
+
+cj_channel: latest-LTS # could be latest || latest-LTS
+cj_version: '2.32'
+
+# some like to see /jenkins as a suffix I don't ... ;)
+cj_application_context: ''
+
+# Directories used by Jenkins [ Apt || Rpm ]
+cj_home: /var/lib/jenkins
+cj_log_dir: /var/log/jenkins
+cj_cache_dir: /var/cache/jenkins
+cj_init_dir: "{{ cj_home }}/init.groovy.d"
+cj_update_dir: "{{ cj_home }}/updates"
+cj_webroot: /var/cache/jenkins/war
+cj_plugins_tmp_folder: /tmp/plugins
+
+# use jenkins behind proxy
+# TODO: find a way to configure via groovy without authentication ... { already have template with auth }
+cj_set_proxy: false
+cj_proxy_host: "{{ proxy_server }}"
+cj_proxy_port: "{{ proxy_port |d('3148') }}"
+#cj_no_proxy_hosts: will be set in tasks
+cj_proxy_conf_file: "{{ cj_home }}/proxy.xml"
+# in case we want to test jenkins without a proxy when cj_set_proxy is set to true
+cj_remove_proxy: false
+
+# jenkins 2 requires skip wizrd param
+# chenge this to true if you really want it ;)
+cj_run_startup_wizard: "false" # String becuase the jvm arg becomes False ...
+
+cj_jvm_args: "-Djava.awt.headless=true -Djenkins.install.runSetupWizard={{ cj_run_startup_wizard }}"
+cj_cmd_args: "--webroot={{ cj_webroot }} --httpPort={{ cj_http_port }}"
+
+# The system level user Jenkins should runas
+#TODO we should revmove this all together ...
+cj_runas: false
+#cj_custom_user: user
+#cj_custom_group: user
+cj_runas_user: "{{ cj_custom_user | d('jenkins') }}"
+cj_runas_group: "{{ cj_custom_group | d('jenkins') }}"
+cj_runas_sudoer: true
+
+# Authorization strategy basic
+cj_allow_anon_read: true
+cj_basic_auth: true
+cj_local_admin_users:
+  - { username: admin, password: admin }
+  - { username: jjb, password: jjb }
+
+cj_local_regular_users:
+  - { username: user1, password: user1 }
+  - { username: user2, password: user2 }
+
+#jenkins-cli
+cj_cli_jar_location: "{{ cj_cache_dir }}/war/WEB-INF/jenkins-cli.jar"
+cj_cli_hostname: 'localhost'
+
+
+# jenkins material theme
+# could be: red, pink, purple, deep-purple see full list @ -> http://afonsof.com/jenkins-material-theme/
+cj_theme_color: amber
+cj_theme_conf_file: org.codefirst.SimpleThemeDecorator.xml
+cj_theme_css_url: https://jenkins-contrib-themes.github.io/jenkins-material-theme/dist/material-{{ cj_theme_color }}.css
+cj_theme_js_url: https://cdn.rawgit.com/djonsson/jenkins-atlassian-theme/gh-pages/theme.js
+
+# Get list + versions from existing Jenkins as a base configuration ...
+#
+#java -jar /var/cache/jenkins/war/WEB-INF/jenkins-cli.jar -s http://localhost:8080 list-plugins \
+#| awk '{print $1, $NF;}' \
+#| awk -F " " ' {print " - { name: \""$1 "\","" version: \""  $2 "\", enabled: \"true\" }"} '
+
+# choose plugin sets to use
+cj_wizard: true
+cj_theme: true
+cj_setup_matrix_auth_strategy: true
+cj_setup_dsl_plugins: true
+cj_goodies: true
+
+# Categories:
+cj_base: false
+
+cj_github: false
+cj_blueocean: false
+cj_pipeline: false
+cj_workflow: false
+
+cj_seed_demo: true
+
+cj_wizard_plugins:
+  - { name: "jenkins-multijob-plugin" }
+  - { name: "bouncycastle-api", version: "2.16.0", enabled: "true", extention: "hpi" }
+  - { name: "cloudbees-folder", version: "5.15", enabled: "true", extention: "hpi" }
+  - { name: "structs", version: "1.5", enabled: "true", extention: "hpi" }
+  - { name: "junit", version: "1.19", enabled: "true", extention: "hpi" }
+  - { name: "antisamy-markup-formatter", version: "1.5", enabled: "true", extention: "hpi" }
+  - { name: "pam-auth", version: "1.3", enabled: "true", extention: "hpi" }
+  - { name: "windows-slaves", version: "1.2", enabled: "true", extention: "hpi" }
+  - { name: "display-url-api", version: "0.5", enabled: "true", extention: "hpi" }
+  - { name: "mailer", version: "1.18", enabled: "true", extention: "hpi" }
+  - { name: "ldap", version: "1.13", enabled: "true", extention: "hpi" }
+  - { name: "token-macro", version: "2.0", enabled: "true", extention: "hpi" }
+  - { name: "external-monitor-job", version: "1.6", enabled: "true", extention: "hpi" }
+  - { name: "icon-shim", version: "2.0.3", enabled: "true", extention: "hpi" }
+  - { name: "matrix-auth", version: "1.4", enabled: "true", extention: "hpi" }
+  - { name: "script-security", version: "1.24", enabled: "true", extention: "hpi" }
+  - { name: "matrix-project", version: "1.7.1", enabled: "true", extention: "hpi" }
+  - { name: "build-timeout", version: "1.18", enabled: "true", extention: "hpi" }
+  - { name: "credentials", version: "2.1.10", enabled: "true", extention: "hpi" }
+  - { name: "workflow-step-api", version: "2.6", enabled: "true", extention: "hpi" }
+  - { name: "plain-credentials", version: "1.3", enabled: "true", extention: "hpi" }
+  - { name: "credentials-binding", version: "1.10", enabled: "true", extention: "hpi" }
+  - { name: "timestamper", version: "1.8.7", enabled: "true", extention: "hpi" }
+  - { name: "workflow-api", version: "2.8", enabled: "true", extention: "hpi" }
+  - { name: "workflow-basic-steps", version: "2.3", enabled: "true", extention: "hpi" }
+  - { name: "resource-disposer", version: "0.3", enabled: "true", extention: "hpi" }
+  - { name: "ws-cleanup", version: "0.32", enabled: "true", extention: "hpi" }
+  - { name: "ant", version: "1.4", enabled: "true", extention: "hpi" }
+  - { name: "gradle", version: "1.25", enabled: "true", extention: "hpi" }
+  - { name: "pipeline-milestone-step", version: "1.2", enabled: "true", extention: "hpi" }
+  - { name: "workflow-support", version: "2.11", enabled: "true", extention: "hpi" }
+  - { name: "pipeline-build-step", version: "2.4", enabled: "true", extention: "hpi" }
+  - { name: "jquery-detached", version: "1.2.1", enabled: "true", extention: "hpi" }
+  - { name: "pipeline-input-step", version: "2.5", enabled: "true", extention: "hpi" }
+  - { name: "ace-editor", version: "1.1", enabled: "true", extention: "hpi" }
+  - { name: "workflow-scm-step", version: "2.3", enabled: "true", extention: "hpi" }
+  - { name: "scm-api", version: "1.3", enabled: "true", extention: "hpi" }
+  - { name: "workflow-cps", version: "2.23", enabled: "true", extention: "hpi" }
+  - { name: "pipeline-stage-step", version: "2.2", enabled: "true", extention: "hpi" }
+  - { name: "workflow-job", version: "2.9", enabled: "true", extention: "hpi" }
+  - { name: "pipeline-graph-analysis", version: "1.3", enabled: "true", extention: "hpi" }
+  - { name: "pipeline-rest-api", version: "2.4", enabled: "true", extention: "hpi" }
+  - { name: "handlebars", version: "1.1.1", enabled: "true", extention: "hpi" }
+  - { name: "momentjs", version: "1.1.1", enabled: "true", extention: "hpi" }
+  - { name: "pipeline-stage-view", version: "2.4", enabled: "true", extention: "hpi" }
+  - { name: "ssh-credentials", version: "1.12", enabled: "true", extention: "hpi" }
+  - { name: "git-client", version: "2.1.0", enabled: "true", extention: "hpi" }
+  - { name: "git-server", version: "1.7", enabled: "true", extention: "hpi" }
+  - { name: "workflow-cps-global-lib", version: "2.5", enabled: "true", extention: "hpi" }
+  - { name: "branch-api", version: "1.11.1", enabled: "true", extention: "hpi" }
+  - { name: "workflow-multibranch", version: "2.9.2", enabled: "true", extention: "hpi" }
+  - { name: "durable-task", version: "1.12", enabled: "true", extention: "hpi" }
+  - { name: "workflow-durable-task-step", version: "2.5", enabled: "true", extention: "hpi" }
+  - { name: "workflow-aggregator", version: "2.4", enabled: "true", extention: "hpi" }
+  - { name: "github-api", version: "1.82", enabled: "true", extention: "hpi" }
+  - { name: "git", version: "3.0.1", enabled: "true", extention: "hpi" }
+  - { name: "github", version: "1.25.0", enabled: "true", extention: "hpi" }
+  - { name: "github-branch-source", version: "1.10.1", enabled: "true", extention: "hpi" }
+  - { name: "github-organization-folder", version: "1.5", enabled: "true", extention: "hpi" }
+  - { name: "mapdb-api", version: "1.0.9.0", enabled: "true", extention: "hpi" }
+  - { name: "subversion", version: "2.7.1", enabled: "true", extention: "hpi" }
+  - { name: "ssh-slaves", version: "1.12", enabled: "true", extention: "hpi" }
+  - { name: "email-ext", version: "2.53", enabled: "true", extention: "hpi"}
+
+cj_dsl_plugins:
+  - { name: "job-dsl", version: "1.54", enabled: "true", extention: "hpi"}
+  - { name: "job-node-stalker" }
+  - { name: "jquery" }
+  - { name: "workflow-cps-global-lib", version: "2.5", enabled: "true", extention: "hpi" }
+  - { name: "build-pipeline-plugin" }
+
+cj_setup_matrix_auth_strategy_plugins:
+  - { name: "icon-shim", version: "2.0.3", enabled: "true", extention: "hpi" }
+  - { name: "matrix-auth", version: "1.4", enabled: "true", extention: "hpi" }
+
+cj_theme_plugins:
+  - { name: "simple-theme-plugin", version: "0.3", enabled: "true", extention: "hpi" }
+
+cj_goodie_plugins:
+  - { name: "greenballs" }
+
+cj_nodes_credentials:
+  - { name: "solaris-user", id: "8bf43f0b-5cef-46b7-8d64-d1bd0a77e11a9", username: "nodeuser", password: "test", description: "use this for solaris slaves" }
+  - { name: "linux-user", id: "f112cc48-5e1b-4efe-9bb0-d1a902f67784", username: "jenkins_user", password: "toor", description: "use this for solaris slaves" }
+  - { name: "aux-user", id: "4b2a3485-bf8b-429d-8b21-c19d6b60f198", username: "aux_jenkins_user", password: "tralala", description: "use this for AUX slaves" }
+
+cj_nodes_create: true
+cj_nodes:
+  - { name: "linux01", host: "linux1.domain.com", launcher_type: "ssh", ssh_port: "22", credential_id: "f112cc48-5e1b-4efe-9bb0-d1a902f67784", home: "/home/jenkins", labels: "linux", executors: "5", description: "linux slave" }
+  - { name: "linux02", host: "linux2.domain.com", launcher_type: "ssh", ssh_port: "22", credential_id: "f112cc48-5e1b-4efe-9bb0-d1a902f67784", home: "/home/jenkins", labels: "linux", executors: "5", description: "linux slave" }
+  - { name: "linux03", host: "linux3.domain.com", launcher_type: "ssh", ssh_port: "22", credential_id: "f112cc48-5e1b-4efe-9bb0-d1a902f67784", home: "/home/jenkins", labels: "linux", executors: "5", description: "linux slave" }
+  - { name: "solaris01", host: "solaris1.domain.com", launcher_type: "ssh", ssh_port: "22", credential_id: "8bf43f0b-5cef-46b7-8d64-d1bd0a77e11a9", home: "/home/jenkins", labels: "solaris", executors: "3", description: "solaris slave" }
+  - { name: "windows01", host: "win01.domain.com", launcher_type: "jnlp", ssh_port: "", credential_id: "", home: "c:\\\\jenkins", labels: "windows", executors: "5", description: "windows slave" }
+
+cj_oracle_account_username: "ivan.prokhorov@gmail.com"
+cj_oracle_account_password: "Abrasha200"
+
+cj_tools_jdks:
+  - { name: "jdk-8u112", version: "jdk-8u112"}
+  - { name: "jdk-8u92", version: "jdk-8u92"}
+  - { name: "jdk-8u77", version: "jdk-8u77"}

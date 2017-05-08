@@ -1,0 +1,39 @@
+---
+# defaults file for ansible-role-dockerized-snipeit
+snipeit_user: tikal
+snipeit_group: tikal
+
+snipeit_container_hostname: snipeit
+snipeit_container_name: snipe/snipe-it
+snipeit_container_tag: v3.6.4
+snipeit_container_port: 80
+snipeit_host_port: 9090
+snipeit_docker_host_ip: localhost
+
+snipeit_conf_dir: /etc/snipeit/
+snipeit_conf_file: snipe-it.conf
+snipeit_conf_filepath: "{{ snipeit_conf_dir }}{{ snipeit_conf_file }}"
+
+snipeit_data_dir: /var/lib/snipeit/
+
+snipeit_db_container_hostname: snipeit-mysql
+snipeit_db_container_name: mysql
+snipeit_db_container_tag: 5.6
+snipeit_db_name: snipeit
+snipeit_db_container_port: 3306
+snipeit_db_host_port: 3306
+snipeit_db_rootpass: manager
+snipeit_db_user: snipeit
+snipeit_db_pass: snipeit
+snipeit_db_storage_path: /var/lib/mysql
+snipeit_db_storage_host_path: /var/lib/snipeit_db
+
+snipeit_smtp_addr: smtp.gmail.com
+snipeit_smtp_port: 587
+snipeit_smtp_encryption: tls # tcp || tls
+snipeit_smtp_mail_from_addr: invnetory@tikalk.com
+snipeit_smtp_mail_from_name: 'Tikal Invnetory Manager'
+snipeit_smtp_mail_username: tikalnet@tikalk.com
+snipeit_smtp_mail_password: tevlov
+
+

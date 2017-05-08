@@ -1,0 +1,24 @@
+---
+
+- name: "Stop MySql container"
+  docker_container:
+    name: "{{ snipeit_db_container_hostname }}"
+    image: "{{ snipeit_db_container_name }}:{{ snipeit_db_container_tag }}"
+    state: absent
+
+- name: "Stop snipeit container"
+  # docker run --name snipe-mysql --env-file=my_env_file -d -p $(docker-machine ip b2d)::3306 mysql:5.6
+  docker_container:
+    name: "{{ snipeit_container_hostname }}"
+    image: "{{ snipeit_container_name }}:{{ snipeit_container_tag }}"
+    state: absent
+
+- name: "Remove docker images"
+  docker_image:
+    state: absent
+    name: "{{ item }}"
+    force: true
+  with_items:
+    - "{{ snipeit_db_container_name }}:{{ snipeit_db_container_tag }}"
+    - "{{ snipeit_container_name }}:{{ snipeit_container_tag }}"
+  when: (snipeit_purge is defined) and (snipeit_purge | bool)

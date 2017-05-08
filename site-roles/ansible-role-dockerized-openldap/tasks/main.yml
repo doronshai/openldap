@@ -1,0 +1,8 @@
+---
+# tasks file for ansible-role-dockerized-openldap
+
+- include: "cleanup.yml"
+  when: (openldap_clean is defined) and (openldap_clean | bool)
+  static: no
+- include: "config.yml"
+- include: "run-container.yml"

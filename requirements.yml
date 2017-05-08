@@ -1,0 +1,78 @@
+---
+
+- src: https://github.com/shelleg/ansible-role-oracle-java.git
+  version: 2.9.0
+  name: oracle-java
+
+- src: geerlingguy.git
+#- src: shelleg.epel
+- src: shelleg.gradle
+- src: shelleg.maven
+- src: shelleg.nexus3-oss
+- src: shelleg.squid
+- src: shelleg.proxy-client
+#- src: shelleg.simple-docker-daemon
+- src: shelleg.juseppe
+
+- src: https://github.com/shelleg/ansible-role-custom-jenkins.git
+  version: master
+  name: shelleg.custom-jenkins
+
+- src: https://github.com/shelleg/ansible-role-simple-docker-daemon.git
+  version: master
+  name: simple-docker-daemon
+
+#- src: https://github.com/shelleg/ansible-role-docker-consul.git
+#  version: master
+#  name: docker-consul
+
+- src: https://github.com/shelleg/ansible-role-docker-registrator.git
+  version: master
+  name: docker-registrator
+
+- src: https://github.com/shelleg/ansible-role-portainer.git
+  version: master
+  name: portainer
+
+### see REFERENCE Below as needed
+
+### REFERENCE ###
+##  DO NOT REOMVE - use as reference ...
+ # from galaxy
+ #- src: yatesr.timezone
+
+ # from GitHub
+ #- src: https://github.com/bennojoy/nginx
+
+ # from GitHub, overriding the name and specifying a specific tag
+ #- src: https://github.com/bennojoy/nginx
+ #  version: master
+ #  name: nginx_role
+
+ # from a webserver, where the role is packaged in a tar.gz
+ #- src: https://some.webserver.example.com/files/master.tar.gz
+ #  name: http-role
+
+ # from Bitbucket
+ #- src: git+http://bitbucket.org/willthames/git-ansible-galaxy
+ #  version: v1.4
+
+ # from Bitbucket, alternative syntax and caveats
+ #- src: http://bitbucket.org/willthames/hg-ansible-galaxy
+ #  scm: hg
+
+ # from GitLab or other git-based scm
+ #- src: git@gitlab.company.com:mygroup/ansible-base.git
+ #  scm: git
+ #  version: 0.1.0
+
+
+##  use any git repo storing an ansible role as a dependency
+## - src: https://github.com/Shelleg/common-ansible-role.git
+##  optionally give is a local name in your project
+##  name: common
+
+##  use any ansble-galaxy role as dependency
+## - src: franklinkim.vim
+##  optionally give is a local name in your project
+##  name: vim

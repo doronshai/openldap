@@ -1,0 +1,29 @@
+---
+- name: "Delete seed job(s)"
+  jenkins_job:
+    name: "{{ item }}"
+    user: "{{ cj_local_admin_users[0].username }}"
+    password: "{{ cj_local_admin_users[0].password }}"
+    state: absent
+  with_items:
+    - seed
+
+- name: "Create seed job(s)"
+  jenkins_job:
+    config: "{{ lookup('file', 'files/{{ item }}.xml') }}"
+    name: "{{ item }}"
+    user: "{{ cj_local_admin_users[0].username }}"
+    password: "{{ cj_local_admin_users[0].password }}"
+  with_items:
+    - seed
+
+- include: "cj-restart-jenkins.yml"
+- meta: flush_handlers
+
+- name: "Trigger seed job"
+  shell: >
+    java -jar {{ cj_cli_jar_location }} \
+    -s http://{{ cj_cli_hostname }}:{{ cj_http_port }}{{ cj_application_context | default('') }}/ \
+    build -s {{ item }}
+  with_items:
+    - seed

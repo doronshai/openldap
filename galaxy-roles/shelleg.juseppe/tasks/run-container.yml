@@ -1,0 +1,15 @@
+---
+
+- name: "Run juseppe container"
+  docker_container:
+    name: "{{ juseppe_container_hostname }}"
+    image: "{{ juseppe_container_name }}:{{ juseppe_container_tag }}"
+    volumes:
+      - "{{ juseppe_plugin_cache_dir }}:/juseppe/plugins/"
+      - "{{ juseppe_cert_dir }}/uc.key:/juseppe/cert/uc.key"
+      - "{{ juseppe_cert_dir }}/uc.crt:/juseppe/cert/uc.crt"
+    ports:
+      - "{{ juseppe_host_port }}:{{ juseppe_container_port }}"
+    env:
+      JUSEPPE_UPDATE_CENTER_ID: default
+      JUSEPPE_BASE_URI: "http://{{ juseppe_docker_host_ip }}:{{ juseppe_host_port }}"

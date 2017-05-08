@@ -1,0 +1,41 @@
+---
+# tasks file for ansible-role-maven
+
+- name: "{{ maven_version }} checksum"
+  set_fact:
+    maven_checksum: e7ebd0b8d6811b42a5dad91fb27fe9b4
+  when: ("{{ maven_version }}" == "3.3.9")
+
+- block:
+  - shell: "mvn -v | grep {{ maven_version }}"
+  - debug: msg=" maven {{ maven_version }} is installed"
+
+  rescue:
+
+  - name: "Install unzip"
+    apt: name=unzip state=latest
+
+  - name: "Download maven {{ maven_version }}"
+    get_url:
+      dest: /tmp
+      url: "{{ maven_download_url }}"
+      checksum: "md5:{{ maven_checksum }}"
+
+  - name: "Extract maven"
+    shell: "unzip /tmp/{{ maven_binary }} -d {{ maven_base_dir }}"
+
+  - name: "Add maven symlink to path"
+    file:
+      src: "{{ maven_base_dir }}/{{ maven_extract_dir }}/bin/mvn"
+      dest: "{{ maven_link }}"
+      owner: root
+      group: root
+      state: link
+
+  - name: "Validate maven version"
+    shell: "mvn -v | grep {{ maven_version }}"
+    register: maven_ver
+
+  - fail:
+      msg: "Seems to be maven {{ maven_version }} is missing ... aborting"
+    when: maven_ver.rc != 0

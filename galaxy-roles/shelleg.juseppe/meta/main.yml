@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: Ivan Prokhorov
+  description: Launch jenkins update site in a container
+  company: Tikal Knowledge
+  license:
+    - MIT
+  min_ansible_version: 2.0
+  platforms:
+    - name: EL
+      versions:
+        - 7
+  galaxy_tags:
+    - Continuos-integration
+    - Jenkins-repository
+    - Jenkins-ci
+
+dependencies: []

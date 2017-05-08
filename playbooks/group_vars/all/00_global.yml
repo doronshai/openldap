@@ -1,0 +1,23 @@
+---
+domain_name: tikal.local
+lan_cidr: 192.168.1.0/24
+wifi_cidr: 10.100.10.0/24
+default_gw: 192.168.1.1
+
+
+tikal_user: tikal
+tikal_group: tikal
+tikal_homedir: /home/tikal
+
+# proxy stuff
+proxy_client_yum: true
+proxy_client_apt: true
+proxy_server_host: 192.168.1.50
+proxy_server_port: 8080
+proxy_client_no_proxy_string: "127.0.0.1,localhost,{{ domain_name }}"
+
+
+# gradle
+gradle_version_minor: "3"
+
+

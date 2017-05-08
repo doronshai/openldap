@@ -1,0 +1,9 @@
+---
+- name: "Include Debain / Redhat OS vars"
+  include_vars: "{{ ansible_os_family }}.yml"
+  tags:
+    - plugins
+
+- name: "Install server"
+  include: "squid-server-install.yml"
+  when: (squid_server_mode is defined) and (squid_server_mode | bool)

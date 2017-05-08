@@ -1,0 +1,13 @@
+---
+# defaults file for ansible-role-proxy-client
+
+proxy_client_system: true
+proxy_client_apt: false
+proxy_client_yum: false
+proxy_client_no_proxy_hosts: []
+proxy_client_no_proxy_string: "127.0.0.1,localhost"
+
+proxy_server_protocol: http
+proxy_server_host: localhost
+proxy_server_port: 8080
+proxy_server: "{{ proxy_server_protocol }}://{{ proxy_server_host }}:{{ proxy_server_port }}/"

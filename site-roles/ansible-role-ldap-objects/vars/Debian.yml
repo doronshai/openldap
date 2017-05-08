@@ -1,0 +1,7 @@
+---
+openldap_objects_deps:
+  - python-ldap
+  - libsasl2-dev
+  - libldap2-dev
+  - libssl-dev
+  - ldapscripts

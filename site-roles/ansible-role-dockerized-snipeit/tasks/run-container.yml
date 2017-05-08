@@ -1,0 +1,33 @@
+---
+
+- name: "Run MySql container"
+  # docker run --name snipe-mysql --env-file=my_env_file -d -p $(docker-machine ip b2d)::3306 mysql:5.6
+  docker_container:
+    name: "{{ snipeit_db_container_hostname }}"
+    image: "{{ snipeit_db_container_name }}:{{ snipeit_db_container_tag }}"
+    restart_policy: always
+    volumes:
+      - "{{ snipeit_db_storage_host_path }}:{{ snipeit_db_storage_path }}"
+    ports:
+      - "{{ snipeit_db_host_port }}:{{ snipeit_db_container_port }}"
+    env_file: "{{ snipeit_conf_filepath }}"
+#    env:
+#      MYSQL_ROOT_PASSWORD: "{{ snipeit_db_rootpass }}"
+#      MYSQL_DATABASE: "{{ snipeit_db_name }}"
+#      MYSQL_USER: "{{ snipeit_db_user }}"
+#      MYSQL_PASSWORD: "{{ snipeit_db_pass }}"
+
+
+- name: "Run snipeit container"
+  # docker run --name snipe-mysql --env-file=my_env_file -d -p $(docker-machine ip b2d)::3306 mysql:5.6
+  docker_container:
+    name: "{{ snipeit_container_hostname }}"
+    image: "{{ snipeit_container_name }}:{{ snipeit_container_tag }}"
+    restart_policy: always
+    volumes:
+      - "{{ snipeit_data_dir }}:{{ snipeit_data_dir }}"
+    ports:
+      - "{{ snipeit_host_port }}:{{ snipeit_container_port }}"
+    env_file: "{{ snipeit_conf_filepath }}"
+    links:
+      - "{{ snipeit_db_container_hostname }}:mysql"

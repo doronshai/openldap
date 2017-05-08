@@ -1,0 +1,33 @@
+---
+- name: "Add user group"
+  group:
+    name: "{{ cj_runas_group }}"
+  when: cj_runas_group != 'jenkins'
+
+- name: "Add user user"
+  user:
+    name: "{{ cj_runas_user }}"
+    group: "{{ cj_runas_group }}"
+  when: cj_runas_user != 'jenkins'
+
+- name: "Configure user user as sudoer"
+  template:
+    src: sudoer.j2
+    dest: "/etc/sudoers.d/{{ cj_runas_user }}"
+    mode: 0644
+    owner: root
+    group: root
+  when: (cj_runas_sudoer is defined) and (cj_runas_sudoer | bool)
+
+# we only need this task if user != jenkins ...
+- name: "Set permissions"
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    state: directory
+    owner: "{{ cj_runas_user }}"
+    group: "{{ cj_runas_group }}"
+  with_items:
+  - "{{ cj_home }}"
+  - "{{ cj_log_dir }}"
+  - "{{ cj_cache_dir }}"

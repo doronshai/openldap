@@ -1,0 +1,17 @@
+---
+
+openldap_conf_dir: /etc/openldap
+openldap_pid_file: /var/run/openldap/slapd.pid
+openldap_args_file: /var/run/openldap/slapd.args
+openldap_user: ldap
+openldap_group: ldap
+openldap_pkgs:
+  - openldap
+  - openldap-servers
+  - openldap-clients
+  - openldap-servers-sql
+  - openldap-devel
+  - libselinux-python
+  - openssl
+  - vim
+

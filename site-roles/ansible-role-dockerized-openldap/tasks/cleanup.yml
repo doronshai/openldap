@@ -1,0 +1,37 @@
+---
+
+- name: "Stop OpenLdap container"
+  # docker run --env LDAP_ORGANISATION="My Company" --env LDAP_DOMAIN="my-company.com" --env LDAP_ADMIN_PASSWORD="JonSn0w" --detach osixia/openldap:1.1.8
+  docker_container:
+    name: "{{ openldap_container_hostname }}"
+    hostname: "{{ openldap_domain_name }}"
+    image: "{{ openldap_container_name }}:{{ openldap_container_tag }}"
+    restart_policy: always
+    state: absent
+
+- name: "Stop phpldapadmin container"
+  docker_container:
+    name: "{{ openldap_phpldapadmin_container_hostname }}"
+    hostname: "{{ openldap_phpldapadmin_container_hostname }}"
+    image: "{{ openldap_phpldapadmin_container_name }}:{{ openldap_phpldapadmin_container_tag }}"
+    restart_policy: always
+    state: absent
+
+- name: "Run openldap backup container"
+  docker_container:
+    name: "{{ openldap_phpldapadmin_container_hostname }}"
+    hostname: "{{ openldap_phpldapadmin_container_hostname }}"
+    image: "{{ openldap_phpldapadmin_container_name }}:{{ openldap_phpldapadmin_container_tag }}"
+    restart_policy: always
+    state: absent
+  when: (openldap_backup_enable is defined) and (openldap_backup_enable | bool)
+
+- name: "Remove docker images"
+  docker_image:
+    state: absent
+    name: "{{ item }}"
+    force: true
+  with_items:
+    - "{{ openldap_container_name }}:{{ openldap_container_tag }}"
+    - "{{ openldap_phpldapadmin_container_name }}:{{ openldap_phpldapadmin_container_tag }}"
+  when: (openldap_purge is defined) and (openldap_purge | bool)

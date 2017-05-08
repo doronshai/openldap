@@ -1,0 +1,35 @@
+---
+# tasks file for ansible-role-ldap-objects
+
+- include_vars: "{{ ansible_os_family }}.yml"
+
+- name: "Install pip reqs"
+  package:
+    name: python-ldap
+    state: present
+  with_items:
+    - "{{ openldap_objects_deps }}"
+
+- name: Install python-ldap
+  pip:
+    name: python-ldap
+    state: present
+
+- fail:
+   msg: "This role requires openldap_auth to be set with server_uri, bind_dn, bind_pw"
+  when: openldap_auth is undefined
+
+
+##- name: "Make sure we have a parent entry for users"
+- ldap_entry:
+    dn: "ou={{ item }},dc=tikal,dc=local"
+#    objectClass: [ 'organizationalUnit', 'top' ]
+    state: present
+    objectClass: organizationalUnit
+    params: "{{ openldap_auth }}"
+#    server_uri: ldap://localhost/
+#    bind_dn: cn=admin,dc={{ openldap_domain_prefix }},dc={{ openldap_domain_suffix }}
+#    bind_pw: "{{ openldap_admin_passowrd }}"
+  with_items:
+    - "{{ openldap_obj_groups }}"
+

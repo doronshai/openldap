@@ -1,0 +1,24 @@
+#
+APP_ENV={{ snipeit_env | d('production') }}
+APP_DEBUG={{ snipeit_debug | d('false') }}
+APP_KEY={{ _snipeit_key }}
+APP_URL=http://{{ ansible_default_ipv4['address'] }}:{{ snipeit_host_port }}
+APP_TIMEZONE=ASIA/JERUSALEM
+APP_LOCALE=en
+MYSQL_ROOT_PASSWORD={{ snipeit_db_rootpass }}
+MYSQL_DATABASE={{ snipeit_db_name }}
+MYSQL_USER={{ snipeit_db_user }}
+MYSQL_PASSWORD={{ snipeit_db_pass }}
+MAIL_DRIVER=smtp
+MAIL_PORT_587_TCP_ADDR={{ snipeit_smtp_addr }}
+MAIL_PORT_587_TCP_PORT={{ snipeit_smtp_port }}
+MAIL_ENV_FROM_ADDR={{ snipeit_smtp_mail_from_addr }}
+MAIL_ENV_FROM_NAME={{ snipeit_smtp_mail_from_name }}
+MAIL_ENV_ENCRYPTION={{ snipeit_smtp_encryption }}
+MAIL_ENV_USERNAME={{ snipeit_smtp_mail_username }}
+MAIL_ENV_PASSWORD={{ snipeit_smtp_mail_password }}
+APP_LOG=single
+APP_LOCKED=false
+FILESYSTEM_DISK=local
+APP_TRUSTED_PROXIES=192.168.1.1,10.0.0.1
+ALLOW_IFRAMING=false

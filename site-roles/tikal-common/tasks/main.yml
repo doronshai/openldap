@@ -1,0 +1,11 @@
+---
+# tasks file for tikal-common
+
+- name: "Set Hostname(s)"
+  include: "hostname.yml"
+
+- name: "Set sudoer(s)"
+  include: "sudoers.yml"
+
+- name: "Install Packadges"
+  include: "pkgs.yml"

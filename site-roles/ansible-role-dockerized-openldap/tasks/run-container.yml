@@ -1,0 +1,48 @@
+---
+
+- name: "Run OpenLdap container"
+  # docker run --env LDAP_ORGANISATION="My Company" --env LDAP_DOMAIN="my-company.com" --env LDAP_ADMIN_PASSWORD="JonSn0w" --detach osixia/openldap:1.1.8
+  docker_container:
+    name: "{{ openldap_container_hostname }}"
+    hostname: "{{ openldap_domain_name }}"
+    image: "{{ openldap_container_name }}:{{ openldap_container_tag }}"
+    restart_policy: always
+    dns_search_domains: "{{ openldap_domain_name }}"
+    volumes:
+      - "{{ openldap_host_runtime_dir }}:{{ openldap_container_runtime_dir }}"
+      - "{{ openldap_host_conf_dir }}:{{ openldap_container_conf_dir }}"
+    ports:
+      - "{{ openldap_host_ldap_port }}:{{ openldap_container_ldap_port }}"
+      - "{{ openldap_host_ldaps_port }}:{{ openldap_container_ldaps_port }}"
+    env_file: "{{ openldap_env_filepath }}"
+    command: --loglevel debug
+
+- name: "Run phpldapadmin container"
+  docker_container:
+    name: "{{ openldap_phpldapadmin_container_hostname }}"
+    hostname: "{{ openldap_phpldapadmin_container_hostname }}"
+    image: "{{ openldap_phpldapadmin_container_name }}:{{ openldap_phpldapadmin_container_tag }}"
+    restart_policy: always
+    dns_search_domains: "{{ openldap_domain_name }}"
+    ports:
+      - "{{ openldap_phpldapadmin_host_http_port }}:{{ openldap_phpldapadmin_container_http_port }}"
+      - "{{ openldap_phpldapadmin_host_https_port }}:{{ openldap_phpldapadmin_container_https_port }}"
+    env_file: "{{ openldap_env_filepath }}"
+    env:
+      PHPLDAPADMIN_LDAP_HOSTS: "{{ openldap_container_hostname }}"
+    links:
+      - "{{ openldap_container_hostname }}:ldap-host"
+
+- name: "Run openldap backup container"
+  docker_container:
+    name: "{{ openldap_backup_container_hostname }}"
+    hostname: "{{ openldap_backup_container_hostname }}"
+    image: "{{ openldap_backup_container_name }}:{{ openldap_backup_container_tag }}"
+    restart_policy: always
+    dns_search_domains: "{{ openldap_domain_name }}"
+    volumes:
+      - "{{ openldap_host_backup_dir }}:{{ openldap_container_backup_dir }}"
+    env_file: "{{ openldap_env_filepath }}"
+    links:
+      - "{{ openldap_container_hostname }}:ldap-host"
+  when: (openldap_backup_enable is defined) and (openldap_backup_enable | bool)

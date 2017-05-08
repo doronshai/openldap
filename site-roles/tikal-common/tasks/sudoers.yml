@@ -1,0 +1,44 @@
+---
+- name: "Add tikal group"
+  group:
+    name: "{{ tikal_group }}"
+
+- name: "Add tikal user"
+  user:
+    name: "{{ tikal_user }}"
+    group: "{{ tikal_group }}"
+    home: "{{ tikal_homedir }}"
+
+- name: "Create tikal .ssh dir"
+  file:
+    dest: "{{ item }}"
+    recurse: yes
+    state: directory
+    mode: 0755
+    owner: "{{ tikal_user }}"
+    group: "{{ tikal_group }}"
+  with_items:
+    - "{{ tikal_homedir }}/.ssh"
+
+- file:
+    path: "{{ tikal_homedir }}/.ssh/authorized_keys"
+    state: touch
+    mode: "u=rw"
+    owner: "{{ tikal_user }}"
+    group: "{{ tikal_group }}"
+
+- name: "Set up authorized_keys for tikal users"
+  authorized_key:
+    user: "{{ tikal_user }}"
+    key: "{{ item }}"
+  with_items:
+    - "{{ ssh_keys }}"
+
+- name: "Configure {{ tikal_user }} as sudoer"
+  template:
+    src:  "{{ tikal_user }}"
+    dest: "/etc/sudoers.d/{{ tikal_user }}"
+    mode: 0644
+    owner: root
+    group: root
+

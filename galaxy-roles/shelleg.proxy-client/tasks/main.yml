@@ -1,0 +1,73 @@
+---
+# tasks file for ansible-role-proxy-client
+
+- name: "set http_proxy fact"
+  set_fact:
+    http_proxy: "{{ proxy_server }}"
+
+#- name: "If proxy_client_no_proxy_hosts notset set it to an empty list"
+#  set_fact:
+#    proxy_client_no_proxy_hosts: []
+#  when: proxy_client_no_proxy_hosts is not defined
+#
+#- name: "If 127.0.0.1 & localhost not in noproxy_hosts or proxy_client_no_proxy_hosts - append it"
+#  set_fact:
+#    proxy_client_no_proxy_hosts:
+#      - 127.0.0.1
+#      - localhost
+#  when: ((noproxy_hosts is defined) and ('127.0.0.1' not in noproxy_hosts)) or ('127.0.0.1' not in proxy_client_no_proxy_hosts)
+#
+#- name: "merge noproxy_hosts (if defined) with proxy_client_no_proxy_hosts"
+#  set_fact:
+#    proxy_client_no_proxy_hosts: "{{ noproxy_hosts }} + {{ proxy_client_no_proxy_hosts }}"
+#  when: (noproxy_hosts is defined)
+#
+#- name: "Filter duplicates"
+#  set_fact:
+#    proxy_client_no_proxy_hosts: "{{ proxy_client_no_proxy_hosts | unique }}"
+#
+#- debug: var=proxy_client_no_proxy_hosts
+
+
+- name: "Configure system wide proxy configuration settings in /etc/profile.d/ [ http_proxy, https_proxy, ftp_proxy, no_proxy ] etc in"
+  template:
+    src: "proxy.sh.j2"
+    dest: "/etc/profile.d/proxy.sh"
+    owner: root
+    group: root
+    mode: 0755
+  when: proxy_client_system
+
+- block:
+  - name: "redhat disable fastmirror"
+    lineinfile:
+      dest: /etc/yum/pluginconf.d/fastestmirror.conf
+      regexp: "^enabled="
+      line: "enabled=0"
+
+#  - find:
+#      paths: "/etc/yum.repos.d"
+#      patterns: "*.repo"
+#    register: yum_repos
+
+# TODO : iterrate over /etc/yum.repos.d/*.repo and remove mirrrorlist and configure baseurl
+
+  - name: "redhat config yum proxy"
+    lineinfile:
+      dest: /etc/yum.conf
+      state: present
+      regexp: "^proxy="
+      insertafter: EOF
+      line: "proxy={{ http_proxy }}"
+#    ignore_errors: yes
+
+  when: proxy_client_yum and ansible_pkg_mgr == "yum"
+
+- name: "config apt caching"
+  template:
+    src: "01proxy.j2"
+    dest: "{{ squid_apt_conf_file }}"
+    owner: root
+    group: root
+    mode: 0644
+  when: proxy_client_apt and ansible_pkg_mgr == "apt"

@@ -1,0 +1,28 @@
+---
+# tasks file for ansible-role-ldap-client
+
+- name: Include distribution specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - libpam-ldap
+    - nscd
+
+- name: "Cteate nsswitch.conf from template"
+  template:
+    src: "{{ ldapc_nsswitch_filename }}.j2"
+    dest: "{{ ldapc_nsswitch_filepath }}"
+
+- name: "Configure /etc/pam.d/common-session"
+  debug:
+    msg: "session required    pam_mkhomedir.so skel=/etc/skel umasl=0022"
+
+- name: Start and enable nscd
+  service:
+    name: nscd
+    enabled: yes
+  tags:
+    - nscd

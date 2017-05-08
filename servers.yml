@@ -1,0 +1,40 @@
+---
+
+#- name: proxy
+#  box: centos/7
+#  ram: 1024
+#  ip: 172.16.1.99
+#  protected: true
+#  # this requires the vagrant-protect plugin to be installed
+#
+#- name: custom-jenkins
+#  box: centos/7
+#  ram: 512
+#  ip: 172.16.1.100
+#  protected: false
+#  # this requires the vagrant-protect plugin to be installed
+
+- name: central
+  box: bento/ubuntu-16.04
+  box_version: '2.2.7'
+  provider: virtualbox
+  ram: 2048
+  ip: 172.16.1.21
+  playbook: tikal-central.yml
+  protected: false
+  gui: false
+  provider: virtualbox
+
+# In case we want to test slaves too ...
+#- name: jenkins-slave-ubuntu
+#  box: bento/ubuntu-16.04
+#  box_version: '2.2.7'
+#  ram: 768
+#  ip: 172.16.1.203
+#  protected: false
+#
+#- name: jenkins-slave-centos
+#  box: centos/7
+#  ram: 768
+#  ip: 172.16.1.202
+#  protected: false

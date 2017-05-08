@@ -1,0 +1,22 @@
+---
+- name: "Run jenkins-cli who-am-i to determin security mode"
+  shell: >
+    java -jar {{ cj_cli_jar_location }} \
+    -s http://{{ cj_cli_hostname }}:{{ cj_http_port }}{{ cj_application_context | default('') }}/ \
+    -noKeyAuth who-am-i
+  ignore_errors: true
+  register: who_am_i
+
+- name: "set cj_auth_enabled boolean based security mode"
+  set_fact:
+    cj_auth_enabled: yes
+  when: ('"ERROR:" in who_am_i.stderr') or ('"authenticated" in who_am_i.stdout')
+
+- name: "set cj_auth_enabled boolean based security mode"
+  set_fact:
+    cj_auth_enabled: no
+  when: (('"anonymous" in who_am_i.stdout') and (cj_auth_enabled is not defined) and (cj_auth_enabled | bool))
+
+- debug:
+    msg: "cj_auth_enabled is set to {{ cj_auth_enabled }}"
+

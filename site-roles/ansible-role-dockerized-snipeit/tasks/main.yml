@@ -1,0 +1,8 @@
+---
+# tasks file for ansible-role-dockerized-snipeit
+
+- include: "cleanup.yml"
+  when: (snipeit_clean is defined) and (snipeit_clean | bool)
+  static: no
+- include: "config.yml"
+- include: "run-container.yml"
